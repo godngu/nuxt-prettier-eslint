@@ -63,11 +63,22 @@ extends: [
 ```json
 // package.json
 
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.14.7",
+    "@nuxtjs/eslint-config": "^6.0.1",
+    "@nuxtjs/eslint-module": "^3.0.2",
+    "eslint": "^7.29.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-vue": "^7.12.1",
+    "prettier": "^2.3.2"
+  }
 ```
 
 ### dev dependency 추가
+> https://github.com/prettier/eslint-plugin-prettier#recommended-configuration
 ```bash
-$ npm i -D prettier eslint-plugin-prettier eslint-config-prettier
+$ npm install --save-dev eslint-plugin-prettier
 ```
 
 ```json
@@ -79,7 +90,7 @@ $ npm i -D prettier eslint-plugin-prettier eslint-config-prettier
     "@nuxtjs/eslint-module": "^3.0.2",
     "eslint": "^7.29.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-prettier": "^4.0.0", // 추가됨
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-vue": "^7.12.1",
     "prettier": "^2.4.1"
