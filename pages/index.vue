@@ -8,14 +8,16 @@
 import axios from 'axios'
 
 export default {
-  data() {
+
+  data () {
     return {
       posts: []
     }
   },
-  async created() {
-    const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
-    this.posts = response.data;
-  },
+
+  async created () {
+    const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
+    this.posts = response.data
+  }
 }
 </script>
