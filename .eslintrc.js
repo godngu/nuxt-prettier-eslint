@@ -2,19 +2,33 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    node: true
+    node: true,
   },
   parserOptions: {
     parser: '@babel/eslint-parser',
-    requireConfigFile: false
+    requireConfigFile: false,
   },
   extends: [
     '@nuxtjs',
     'plugin:nuxt/recommended',
-    'prettier'
+    'plugin:prettier/recommended',
   ],
-  plugins: [
-  ],
+  plugins: [],
   // add your custom rules here
-  rules: {}
-}
+  rules: {
+    'no-console': 'off',
+    'prettier/prettier': [
+      'error',
+      {
+        singleQuote: true,
+        semi: true,
+        useTabs: false,
+        tabWidth: 2,
+        trailingComma: 'all',
+        printWidth: 80,
+        bracketSpacing: true,
+        arrowParens: 'avoid',
+      },
+    ],
+  },
+};

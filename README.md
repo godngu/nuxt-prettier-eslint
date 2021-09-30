@@ -1,69 +1,132 @@
-# nuxt-prettier-eslint
+# 목표
+- eslint와 prettier의 설정을 적용한다.
+- eslint와 prettier 동시 설정시 발생하는 충동을 테스트 한다.
+- 코드 검출은 ESLint가 하고, 포매팅은 Prettier가 담당하도록 설정한다.
+    - 단 ESLint의 포매팅 기능은 충돌되지 않아야 한다.
 
-## Build Setup
+## 설명
 
+### `ESLint`
+- ES(EcmaScript) + Lint의 합성어
+- ESLint는 JavaScript의 스타일 가이드를 따르지 않거나 문제가 있는 안티 패턴들을 찾아주고 일관된 코드 스타일로 작성하도록 도와준다.
+
+### `Prettier`
+- 기존의 코드에 적용되어있던 스타일들을 전부 무시하고, 정해진 규칙에 따라 자동으로 코드 스타일을 정리해 주는 Code Formatter 이다.
+
+### 차이점
+| ESLint | Pretter |
+| --- | --- |
+| 문법 에러 검출 | 코딩 스타일 일관성 |
+
+### 함께 설정할 경우 문제점
+- ESLint는 코드 분석기 이지만 formatting 관련 규칙들이 있다.
+- 만약 ESLint와 Prettier를 같이 사용한다면 **포매팅 충돌 문제**가 발생할 수 있다.
+- 이를 위해서 추가 설정이 필요하다.
+
+
+## eslint + prettier 설정 비교
+
+### pritter 설정 끄고 테스트
+```javascript
+// .eslintrc.js
+
+extends: [
+    '@nuxtjs',
+    'plugin:nuxt/recommended'
+    // 'prettier'
+],
+```
+- vue 파일에서 규칙 오류를 잡아내고 저장시 자동 보정 됨
+- `.eslintrc.js`의 `rules` 설정여부와 상관 없음
+- 만약 `extends`의 `'prettier'`를 활성화 하면 `linter` 동작 안 함
+
+## 최종 설정 방법
+> (nuxt-app CLI를 통한 프로젝트 생성시)
+
+### 프로젝트 생성
 ```bash
-# install dependencies
-$ npm install
+$ npm init nuxt-app {프로젝트명}
+```
+- 옵션에서 `eslint`, `prettier` 기본 선택
 
-# serve with hot reload at localhost:3000
-$ npm run dev
+### 프로젝트 생성 후 기본값
+```javascript
+// .eslintrc.js
 
-# build for production and launch server
-$ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
+extends: [
+    '@nuxtjs',
+    'plugin:nuxt/recommended',
+    'prettier'
+],
 ```
 
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
+```json
+// package.json
 
-## Special Directories
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.14.7",
+    "@nuxtjs/eslint-config": "^6.0.1",
+    "@nuxtjs/eslint-module": "^3.0.2",
+    "eslint": "^7.29.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-vue": "^7.12.1",
+    "prettier": "^2.3.2"
+  }
+```
 
-You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
+### dev dependency 추가
+> https://github.com/prettier/eslint-plugin-prettier#recommended-configuration
+```bash
+$ npm install --save-dev eslint-plugin-prettier
+```
 
-### `assets`
+```json
+// package.json
 
-The assets directory contains your uncompiled assets such as Stylus or Sass files, images, or fonts.
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.14.7",
+    "@nuxtjs/eslint-config": "^6.0.1",
+    "@nuxtjs/eslint-module": "^3.0.2",
+    "eslint": "^7.29.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0", // 추가됨
+    "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-vue": "^7.12.1",
+    "prettier": "^2.4.1"
+  }
+```
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/assets).
+### .eslintrc.js 설정 변경
+#### extends 추가
+```javascript
+extends: [
+    '@nuxtjs',
+    'plugin:nuxt/recommended',
+    'plugin:prettier/recommended', // 추가
+],
+```
 
-### `components`
+#### Prettier 룰을 eslint에 적용
+```javascript
+rules: {
+    'no-console': 'off',
+    'prettier/prettier': [
+        'error',
+        {
+            // 추가되는 룰은 이곳에 작성한다.
+            singleQuote: true,
+            semi: true,
+            useTabs: false,
+            tabWidth: 2,
+            trailingComma: 'all',
+            printWidth: 80,
+            bracketSpacing: true,
+            arrowParens: 'avoid',
+        },
+    ],
+},
+```
 
-The components directory contains your Vue.js components. Components make up the different parts of your page and can be reused and imported into your pages, layouts and even other components.
+> `.prettierrc` 파일은 삭제한다.
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
-
-### `layouts`
-
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
-
-
-### `pages`
-
-This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/get-started/routing).
-
-### `plugins`
-
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
-
-### `static`
-
-This directory contains your static files. Each file inside this directory is mapped to `/`.
-
-Example: `/static/robots.txt` is mapped as `/robots.txt`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
-
-### `store`
-
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
